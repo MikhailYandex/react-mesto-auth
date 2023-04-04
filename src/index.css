@@ -48,10 +48,13 @@
 @import url(./blocks/popup/__figure/popup__figure.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__caption/popup__caption.css);
+@import url(./blocks/popup/__infoimage/popup__infoimage.css);
 @import url(./blocks/popup/__container-avatar/popup__container-avatar.css);
 @import url(./blocks/popup/__container-confirm/popup__container-confirm.css);
 @import url(./blocks/popup/__title-confirm/popup__title-confirm.css);
 @import url(./blocks/popup/__title-avatar/popup__title-avatar.css);
+@import url(./blocks/popup/__container-infoTooltip/popup__container-infoTooltip.css);
+@import url(./blocks/popup/__title/_infotooltip/popup__title_infoTooltip.css);
 
 @import url(./blocks/popup/__input-error/popup__input-error.css);
 @import url(./blocks/popup/__input-error/_active/popup__input-error_active.css);
@@ -68,3 +71,7 @@
 @import url(./blocks/burger/__line/burger__line.css);
 @import url(./blocks/burger/__line/_active/burger__line_active.css);
 @import url(./blocks/header/_active/header_active.css);
+
+@import url(./blocks/notfound/notfound.css);
+@import url(./blocks/notfound/__text/notfound__text.css);
+@import url(./blocks/notfound/__button/notfound__button.css);

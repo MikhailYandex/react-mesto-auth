@@ -15,6 +15,7 @@ import Register from "./Register";
 import Login from "./Login";
 import PageNotFound from "./PageNotFound";
 import * as auth from "../utils/auth";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -22,6 +23,10 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+
+	//оповещение о статусе регистрации
+	const [isInfoTooltip, setIsInfoTooltip] = useState(false);
+  const [isInfoTooltipOk, setIsInfoTooltipOk] = useState(false);
 
   //проверка, авторизован ли пользователь
   const [loggedIn, setLoggedIn] = useState(false);
@@ -132,9 +137,13 @@ function App() {
     auth
       .register(email, password)
       .then(() => {
+				setIsInfoTooltipOk(true);
+        setIsInfoTooltip(true);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
+				setIsInfoTooltipOk(false);
+        setIsInfoTooltip(true);
         console.log(err);
       });
   }
@@ -151,6 +160,8 @@ function App() {
         }
       })
       .catch((err) => {
+				setIsInfoTooltipOk(false);
+        setIsInfoTooltip(true);
         console.log(err);
       });
   }
@@ -206,6 +217,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
     setIsConfirmationPopupOpen(false);
+		setIsInfoTooltip(false);
     setSelectedCard({});
   }
 
@@ -238,6 +250,12 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
+
+				<InfoTooltip
+          isOpen={isInfoTooltip}
+          onClose={closeAllPopups}
+          isInfoTooltipOk={isInfoTooltipOk}
+        />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
