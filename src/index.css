@@ -66,6 +66,9 @@
 @import url(./blocks/auth/__title/auth__title.css);
 @import url(./blocks/auth/__question/auth__question.css);
 @import url(./blocks/auth/__submit-button/auth__submit-button.css);
+@import url(./blocks/auth/__pasword-btn/auth__pasword-btn.css);
+@import url(./blocks/auth/__label-pass/auth__label-pass.css);
+@import url(./blocks/auth/__pasword-btn/_active/auth__pasword-btn_active.css);
 
 @import url(./blocks/burger/burger.css);
 @import url(./blocks/burger/__line/burger__line.css);
