@@ -9,11 +9,12 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmationPopup from "./ConfirmationPopup";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
 import PageNotFound from "./PageNotFound";
+import * as auth from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -24,6 +25,9 @@ function App() {
 
   //проверка, авторизован ли пользователь
   const [loggedIn, setLoggedIn] = useState(false);
+
+  //данные пользователя
+  const [userEmail, setUserEmail] = useState("");
 
   const [selectedCard, setSelectedCard] = useState({});
 
@@ -38,6 +42,8 @@ function App() {
 
   //Загрузка данных при клике на кнопку
   const [isLoadingButton, setisLoadingButton] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -122,6 +128,56 @@ function App() {
       .finally(() => setisLoadingButton(false));
   }
 
+  function onRegister(email, password) {
+    auth
+      .register(email, password)
+      .then(() => {
+        navigate("/sign-in", { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function onLogin(email, password) {
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          navigate("/", { replace: true });
+          setLoggedIn(true);
+          localStorage.setItem("token", data.token);
+          setUserEmail(email);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+	//при открытии страницы проверяется токен
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const jwt = localStorage.getItem("token");
+      auth
+        .checkToken(jwt)
+        .then((data) => {
+          setUserEmail(data.data.email);
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
+
+	function handleSingOut() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    navigate('/sing-in', { replace: true });
+  };
+
   function handleCardDeleteClick(card) {
     setIsConfirmationPopupOpen(true);
     setRemovingCard(card);
@@ -156,7 +212,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header onSingOut={handleSingOut} userEmail={userEmail} />
         <Routes>
           <Route
             path="/"
@@ -174,8 +230,11 @@ function App() {
               />
             }
           />
-          <Route path="/sign-in" element={<Login />}></Route>
-          <Route path="/sign-up" element={<Register />}></Route>
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+          <Route
+            path="/sign-up"
+            element={<Register onRegister={onRegister} />}
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />

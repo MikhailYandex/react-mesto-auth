@@ -16,3 +16,9 @@
     max-width: 282px;
   }
 }
+
+@media (max-width: 410px) {
+  .footer {
+    margin-top: 80px;
+  }
+}

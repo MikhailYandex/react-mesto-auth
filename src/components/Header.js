@@ -1,15 +1,21 @@
-import React from "react";
+import { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import logo from "../images/svg/logo.svg";
 
-function Header({ userEmail }) {
-	
-	function signOut(){
-		localStorage.removeItem('token');
-	}
+function Header({ userEmail, onSingOut }) {
+	const [isBurgerActive, setIsBurgerActive] = useState(false);
+
+	window.onresize = () => {
+    setIsBurgerActive(false);
+  };
+
+  function signOut() {
+    setIsBurgerActive(false);
+    onSingOut();
+  }
 
   return (
-    <header className="header">
+    <header className={`header ${isBurgerActive ? 'header_active' : ''}`}>
       <img src={logo} className="header__logo" alt="Логотип Место Россия" />
       <Routes>
         <Route
@@ -31,12 +37,23 @@ function Header({ userEmail }) {
         <Route
           path="/"
           element={
-            <div className="header__links-container">
-              <p className="header__email">{userEmail}</p>
-              <Link className="header__logout" to="/sign-up" onClick={signOut}>
-                Выход
-              </Link>
-            </div>
+						<>
+							<div className={`header__auth ${isBurgerActive ? 'header__auth_active' : ''}`}>
+								<p className="header__email">{userEmail}</p>
+								<Link className="header__logout" to="/sign-in" onClick={signOut}>
+									Выйти
+								</Link>
+							</div>
+							<button
+								className="burger"
+								type="button"
+								onClick={() => setIsBurgerActive(!isBurgerActive)}
+							>
+							<span
+								className={`burger__line ${isBurgerActive ? 'burger__line_active' : ''}`}
+							/>
+						</button>
+					</>
           }
         />
       </Routes>

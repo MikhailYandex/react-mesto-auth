@@ -1,19 +1,19 @@
 import { useState } from "react";
 
-const AuthForm = ({ children, title, onSubmit, nameForm, buttonText }) => {
+const AuthForm = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function onSubmit(e) {
     e.preventDefault();
-    onSubmit(email, password);
+    props.onSubmit(email, password);
   }
 
   return (
     <main>
       <section className="auth">
-        <h2 className="auth__title">{title}</h2>
-        <form name={nameForm} onSubmit={onSubmit}>
+        <h2 className="auth__title">{props.title}</h2>
+        <form name={props.nameForm} onSubmit={onSubmit}>
           <input
             className="auth__input"
 						type="email"
@@ -36,9 +36,9 @@ const AuthForm = ({ children, title, onSubmit, nameForm, buttonText }) => {
               setPassword(e.target.value);
             }}
           />
-          <button className="auth__submit-button">{buttonText}</button>
+          <button className="auth__submit-button">{props.buttonText}</button>
         </form>
-        {children}
+        {props.children}
       </section>
     </main>
   );

@@ -8,15 +8,15 @@
   border-bottom: 1px solid #545454;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 767px) {
   .header {
-    padding-top: 28px;
+		padding: 28px 0 32px;
     max-width: none;
   }
 }
 
-@media (max-width: 410px) {
+@media (max-width: 545px) {
 	.header {
-		padding: 28px 0 32px;
+		align-items: end;
 	}
 }
