@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import eyeImage from "../images/eye.svg";
+import useFormWithValidation from "../hooks/useFormWithValidation";
 
-const AuthForm = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const AuthForm = ({ onSubmit, nameForm, title, buttonText, children, loggedIn }) => {
 
-  function onSubmit(e) {
+  const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    props.onSubmit(email, password);
-  }
+    if (isValid) {
+      onSubmit(values.email, values.password);
+    }
+  };
 
-	//смена видимости пароля и значка картинки
+  useEffect(() => {
+    if (loggedIn) resetForm();
+  }, [loggedIn]);
+
+  //смена видимости пароля и значка картинки
   const [type, setType] = useState("password");
   const [toggleIconClasses, setToggleIconClasses] = useState("");
 
@@ -27,33 +34,44 @@ const AuthForm = (props) => {
   return (
     <main>
       <section className="auth">
-        <h2 className="auth__title">{props.title}</h2>
-        <form name={props.nameForm} onSubmit={onSubmit}>
-          <label>
+        <h2 className="auth__title">{title}</h2>
+        <form name={nameForm} onSubmit={handleSubmit}>
+          <label className="auth__label">
             <input
               className="auth__input"
               type="email"
               name="email"
               required
               placeholder="Email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              value={values.email || ""}
+              onChange={handleChange}
             />
+            <span
+              className={`email-error popup__input-error ${
+                errors.email && "popup__input-error_active"
+              }`}
+            >
+              {errors.email || ""}
+            </span>
           </label>
-          <label className="auth__label-pass">
+          <label className="auth__label auth__label-pass">
             <input
               className="auth__input"
               type={type}
               name="password"
               required
               placeholder="Пароль"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              minLength="6"
+              value={values.password || ""}
+              onChange={handleChange}
             />
+            <span
+              className={`password-error popup__input-error ${
+                errors.password && "popup__input-error_active"
+              }`}
+            >
+              {errors.password || ""}
+            </span>
             <div
               onClick={togglePassInput}
               className={`auth__pasword-btn ${toggleIconClasses}`}
@@ -61,9 +79,11 @@ const AuthForm = (props) => {
               <img src={eyeImage} className="auth__pasword-btn" />
             </div>
           </label>
-          <button className="auth__submit-button">{props.buttonText}</button>
+          <button disabled={!isValid} type="submit" className={`auth__submit-button ${
+              !isValid && "auth__submit-button_disabled"
+            }`}>{buttonText}</button>
         </form>
-        {props.children}
+        {children}
       </section>
     </main>
   );

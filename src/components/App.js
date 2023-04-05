@@ -24,8 +24,8 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
 
-	//оповещение о статусе регистрации
-	const [isInfoTooltip, setIsInfoTooltip] = useState(false);
+  //оповещение о статусе регистрации
+  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
   const [isInfoTooltipOk, setIsInfoTooltipOk] = useState(false);
 
   //проверка, авторизован ли пользователь
@@ -134,21 +134,24 @@ function App() {
   }
 
   function onRegister(email, password) {
+    setisLoadingButton(true);
     auth
       .register(email, password)
       .then(() => {
-				setIsInfoTooltipOk(true);
+        setIsInfoTooltipOk(true);
         setIsInfoTooltip(true);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
-				setIsInfoTooltipOk(false);
+        setIsInfoTooltipOk(false);
         setIsInfoTooltip(true);
         console.log(err);
-      });
+      })
+      .finally(() => setisLoadingButton(false));
   }
 
   function onLogin(email, password) {
+    setisLoadingButton(true);
     auth
       .authorize(email, password)
       .then((data) => {
@@ -160,13 +163,14 @@ function App() {
         }
       })
       .catch((err) => {
-				setIsInfoTooltipOk(false);
+        setIsInfoTooltipOk(false);
         setIsInfoTooltip(true);
         console.log(err);
-      });
+      })
+      .finally(() => setisLoadingButton(false));
   }
 
-	//при открытии страницы проверяется токен
+  //при открытии страницы проверяется токен
   useEffect(() => {
     if (localStorage.getItem("token")) {
       const jwt = localStorage.getItem("token");
@@ -183,11 +187,11 @@ function App() {
     }
   }, []);
 
-	function handleSingOut() {
-    localStorage.removeItem('token');
+  function handleSingOut() {
+    localStorage.removeItem("token");
     setLoggedIn(false);
-    navigate('/sing-in', { replace: true });
-  };
+    navigate("/sing-in", { replace: true });
+  }
 
   function handleCardDeleteClick(card) {
     setIsConfirmationPopupOpen(true);
@@ -217,7 +221,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
     setIsConfirmationPopupOpen(false);
-		setIsInfoTooltip(false);
+    setIsInfoTooltip(false);
     setSelectedCard({});
   }
 
@@ -242,16 +246,31 @@ function App() {
               />
             }
           />
-          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+          <Route
+            path="/sign-in"
+            element={
+              <Login
+                buttonText={isLoadingButton ? "Подождите..." : "Войти"}
+                onLogin={onLogin}
+              />
+            }
+          />
           <Route
             path="/sign-up"
-            element={<Register onRegister={onRegister} />}
+            element={
+              <Register
+                buttonText={
+                  isLoadingButton ? "Подождите..." : "Зарегистрироваться"
+                }
+                onRegister={onRegister}
+              />
+            }
           />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
 
-				<InfoTooltip
+        <InfoTooltip
           isOpen={isInfoTooltip}
           onClose={closeAllPopups}
           isInfoTooltipOk={isInfoTooltipOk}

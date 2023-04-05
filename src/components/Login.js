@@ -1,14 +1,15 @@
 import AuthForm from "./AuthForm";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, buttonText }) => {
+
 	return (
 		<AuthForm
       title="Вход"
       nameForm="authentication"
-      buttonText="Войти"
+      buttonText={buttonText}
       onSubmit={onLogin}
     />
 	)
 }
 
-export default Login
+export default Login;
