@@ -46,7 +46,7 @@ function App() {
   const [removingCard, setRemovingCard] = useState({});
 
   //Загрузка данных при клике на кнопку
-  const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
 
   const navigate = useNavigate();
 
@@ -83,7 +83,7 @@ function App() {
 
   //отправка новых данных пользователя на сервер
   function handleUpdateUser(data) {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     api
       .editUserInfo(data.name, data.about)
       .then((newData) => {
@@ -91,12 +91,12 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false));
   }
 
   //отправка новой аватарки на сервер
   function handleUpdateAvatar(link) {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     api
       .editUserAvatar(link)
       .then((data) => {
@@ -104,12 +104,12 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false));
   }
 
   //добавление новой карточки из формы
   function handleAddPlaceSubmit(data) {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     api
       .addCard(data)
       .then((newCard) => {
@@ -117,12 +117,12 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false));
   }
 
   //обработчик удаления карточки
   function handleCardDelete() {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     api
       .removeCard(removingCard._id)
       .then(() => {
@@ -130,28 +130,27 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false));
   }
 
   function onRegister(email, password) {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     auth
       .register(email, password)
       .then(() => {
         setIsInfoTooltipOk(true);
-        setIsInfoTooltip(true);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
         setIsInfoTooltipOk(false);
-        setIsInfoTooltip(true);
         console.log(err);
       })
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false))
+			.finally(() => setIsInfoTooltip(true))
   }
 
   function onLogin(email, password) {
-    setisLoadingButton(true);
+    setIsLoadingButton(true);
     auth
       .authorize(email, password)
       .then((data) => {
@@ -167,7 +166,7 @@ function App() {
         setIsInfoTooltip(true);
         console.log(err);
       })
-      .finally(() => setisLoadingButton(false));
+      .finally(() => setIsLoadingButton(false));
   }
 
   //при открытии страницы проверяется токен
@@ -281,34 +280,34 @@ function App() {
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
           buttonText={isLoadingButton ? "Сохранение..." : "Сохранить"}
-        ></EditProfilePopup>
+        />
 
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
           buttonText={isLoadingButton ? "Сохранение..." : "Сохранить"}
-        ></AddPlacePopup>
+        />
 
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
           buttonText={isLoadingButton ? "Сохранение..." : "Сохранить"}
-        ></EditAvatarPopup>
+        />
 
         <ImagePopup
           card={selectedCard}
           onClose={closeAllPopups}
           isOpen={isImagePopupOpen}
-        ></ImagePopup>
+        />
 
         <ConfirmationPopup
           isOpen={isConfirmationPopupOpen}
           onClose={closeAllPopups}
           onCardDelete={handleCardDelete}
           buttonText={isLoadingButton ? "Удаление..." : "Да"}
-        ></ConfirmationPopup>
+        />
       </div>
     </CurrentUserContext.Provider>
   );

@@ -1,5 +1,5 @@
-import SuccessImage from "../images/success.svg";
-import FailedImage from "../images/error.svg";
+import successImage from "../images/success.svg";
+import failedImage from "../images/error.svg";
 
 function InfoTooltip({ onClose, isOpen, isInfoTooltipOk }) {
   return (
@@ -10,7 +10,8 @@ function InfoTooltip({ onClose, isOpen, isInfoTooltipOk }) {
       >
         <button type="button" className="popup__close" onClick={onClose} />
         <img
-          src={isInfoTooltipOk ? SuccessImage : FailedImage}
+          src={isInfoTooltipOk ? successImage : failedImage}
+          alt="оповещение о статусе регистрации"
           className="popup__infoimage"
         />
         <h2 className="popup__title popup__title_infoTooltip">

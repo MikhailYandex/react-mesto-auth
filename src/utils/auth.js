@@ -7,31 +7,35 @@ function checkResponse(res) {
   return Promise.reject(`${res.status}: ${res.statusText}`);
 }
 
+function request(url, options) {
+  return fetch(url, options).then(checkResponse);
+}
+
 //регистрация пользователя
 export function register(email, password) {
-  return fetch(`${BASE_URL}/signup`, {
+  return request(`${BASE_URL}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-  }).then(checkResponse);
+  });
 }
 
 //авторизация пользователя
 export function authorize(email, password) {
-  return fetch(`${BASE_URL}/signin`, {
+  return request(`${BASE_URL}/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-  }).then(checkResponse);
+  });
 }
 
 //проверка валидности токена
 export function checkToken(jwt) {
-  return fetch(`${BASE_URL}/users/me`, {
+  return request(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
-  }).then(checkResponse);
+  });
 }
